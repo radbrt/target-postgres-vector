@@ -1,0 +1,57 @@
+ci:
+  autofix_prs: false
+  autoupdate_schedule: weekly
+  autoupdate_commit_msg: 'chore: pre-commit autoupdate'
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+  - id: check-json
+  - id: check-toml
+    exclude: |
+        (?x)^(
+            copier_template/.*/pyproject.toml
+        )$
+  - id: end-of-file-fixer
+    exclude: (copier_template/.*|docs/.*|samples/.*\.json)
+  - id: trailing-whitespace
+
+- repo: https://github.com/psf/black
+  rev: 23.12.0
+  hooks:
+  - id: black
+    exclude: |
+        (?x)^(
+            copier_template/.*
+        )$
+
+- repo: https://github.com/pycqa/isort
+  rev: 5.13.2
+  hooks:
+  - id: isort
+    exclude: (copier_template/.*)
+
+- repo: https://github.com/pycqa/flake8
+  rev: 6.1.0
+  hooks:
+  - id: flake8
+    additional_dependencies:
+    - flake8-docstrings==1.6.0
+
+- repo: https://github.com/asottile/pyupgrade
+  rev: v3.15.0
+  hooks:
+  - id: pyupgrade
+    args: [--py37-plus]
+
+- repo: https://github.com/pre-commit/mirrors-mypy
+  rev: 'v1.7.1'
+  hooks:
+  - id: mypy
+    exclude: tests
+    additional_dependencies:
+    - types-paramiko
+    - types-simplejson
+    - types-sqlalchemy
+    - types-jsonschema
